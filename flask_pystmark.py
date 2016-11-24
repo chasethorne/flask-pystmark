@@ -1,5 +1,5 @@
 from flask import current_app
-from pystmark import (send, send_batch, get_delivery_stats, get_bounces,
+from pystmark import (send, send_with_template, send_batch, get_delivery_stats, get_bounces,
                       get_bounce, get_bounce_dump, get_bounce_tags,
                       activate_bounce, Message as _Message)
 from __about__ import __version__, __title__, __description__
@@ -35,6 +35,17 @@ class Pystmark(object):
         :rtype: :class:`pystmark.SendResponse`
         '''
         return self._pystmark_call(send, message, **request_args)
+
+    def send_with_template(self, message, **request_args):
+        '''Send a message.
+
+        :param message: Message to send.
+        :type message: `dict` or :class:`Message`
+        :param \*\*request_args: Keyword arguments to pass to
+            :func:`requests.request`.
+        :rtype: :class:`pystmark.SendResponse`
+        '''
+        return self._pystmark_call(send_with_template, message, **request_args)
 
     def send_batch(self, messages, **request_args):
         '''Send a batch of messages.
@@ -165,8 +176,9 @@ class Message(_Message):
     '''
 
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
-                 tag=None, html=None, text=None, reply_to=None, headers=None,
-                 attachments=None, verify=None):
+                 template_id=None, template_model=None, tag=None, html=None,
+                 text=None, reply_to=None, headers=None, attachments=None,
+                 verify=None):
         if sender is None:
             sender = current_app.config.get('PYSTMARK_DEFAULT_SENDER')
         if reply_to is None:
@@ -176,7 +188,8 @@ class Message(_Message):
         if verify is None:
             verify = current_app.config.get('PYSTMARK_VERIFY_MESSAGES', False)
         super(Message, self).__init__(sender=sender, to=to, cc=cc, bcc=bcc,
-                                      subject=subject, tag=tag, html=html,
-                                      text=text, reply_to=reply_to,
+                                      subject=subject, template_id=template_id, 
+                                      template_model=template_model, tag=tag,
+                                      html=html, text=text, reply_to=reply_to,
                                       headers=headers, attachments=attachments,
                                       verify=verify)

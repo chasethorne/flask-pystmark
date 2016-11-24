@@ -1,2 +1,2 @@
 Flask
-pystmark
+git+git://github.com/xsleonard/pystmark@master
