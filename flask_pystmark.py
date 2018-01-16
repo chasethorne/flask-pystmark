@@ -178,7 +178,7 @@ class Message(_Message):
     def __init__(self, sender=None, to=None, cc=None, bcc=None, subject=None,
                  template_id=None, template_model=None, tag=None, html=None,
                  text=None, reply_to=None, headers=None, attachments=None,
-                 verify=None):
+                 verify=None, track_opens=None):
         if sender is None:
             sender = current_app.config.get('PYSTMARK_DEFAULT_SENDER')
         if reply_to is None:
@@ -192,4 +192,4 @@ class Message(_Message):
                                       template_model=template_model, tag=tag,
                                       html=html, text=text, reply_to=reply_to,
                                       headers=headers, attachments=attachments,
-                                      verify=verify)
+                                      verify=verify, track_opens=track_opens)
